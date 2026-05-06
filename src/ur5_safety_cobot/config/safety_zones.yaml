@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Safety Zone Configuration  —  ISO 10218 / TS 15066 Inspired
+# ─────────────────────────────────────────────────────────────────────────────
+#
+#  Zone Layout (distance from camera / sensor):
+#
+#  ┌──────────────────────────────────────────────────────────────────┐
+#  │                        > 200 cm                                 │
+#  │                   ╔══════════════╗                               │
+#  │                   ║    NORMAL    ║  speed_multiplier = 1.0      │
+#  │                   ╚══════════════╝                               │
+#  ├──────────────────────────────────────────────────────────────────┤
+#  │                   100 cm – 200 cm                               │
+#  │                   ╔══════════════╗                               │
+#  │                   ║   REDUCED    ║  speed_multiplier = 0.3      │
+#  │                   ╚══════════════╝                               │
+#  ├──────────────────────────────────────────────────────────────────┤
+#  │                        < 100 cm                                 │
+#  │                   ╔══════════════╗                               │
+#  │                   ║     STOP     ║  speed_multiplier = 0.0      │
+#  │                   ╚══════════════╝                               │
+#  └──────────────────────────────────────────────────────────────────┘
+#
+# ─────────────────────────────────────────────────────────────────────────────
+
+safety_zone_manager:
+  ros__parameters:
+    # ── Distance Thresholds (centimeters) ──────────────────────────────────
+    # These define the boundaries between the three safety zones.
+    stop_distance_cm: 100.0          # Below this → STOP
+    reduced_distance_cm: 200.0       # Between stop and this → REDUCED SPEED
+    # Above reduced_distance_cm     → NORMAL OPERATION
+
+    # ── Speed Multipliers ──────────────────────────────────────────────────
+    normal_speed: 1.0                # Full operating speed
+    reduced_speed: 0.3               # 30% of full speed
+    stop_speed: 0.01                 # Near-halt (0.01 avoids div-by-zero)
+
+    # ── Timing Parameters ──────────────────────────────────────────────────
+    distance_timeout_sec: 2.0        # If no distance reading for this long,
+                                     # assume STOP (fail-safe)
+    zone_hysteresis_cm: 10.0         # Prevents zone flickering at boundaries
+    update_rate_hz: 10.0             # Safety manager loop rate
+
+    # ── Topic Configuration ────────────────────────────────────────────────
+    distance_topic: "/human_distance"
+    speed_param_target: "/pnp_loop"
+    zone_status_topic: "/safety_zone/status"
+    zone_marker_topic: "/safety_zone/markers"

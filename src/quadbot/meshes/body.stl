@@ -1,0 +1,86 @@
+solid cube
+  facet normal 0 0 0
+    outer loop
+      vertex -0.2000 -0.1000 -0.0500
+      vertex -0.2000 0.1000 -0.0500
+      vertex 0.2000 -0.1000 -0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex 0.2000 -0.1000 -0.0500
+      vertex -0.2000 0.1000 -0.0500
+      vertex 0.2000 0.1000 -0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex -0.2000 -0.1000 0.0500
+      vertex 0.2000 -0.1000 0.0500
+      vertex -0.2000 0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex 0.2000 -0.1000 0.0500
+      vertex 0.2000 0.1000 0.0500
+      vertex -0.2000 0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex -0.2000 -0.1000 -0.0500
+      vertex 0.2000 -0.1000 -0.0500
+      vertex -0.2000 -0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex 0.2000 -0.1000 -0.0500
+      vertex 0.2000 -0.1000 0.0500
+      vertex -0.2000 -0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex 0.2000 0.1000 -0.0500
+      vertex -0.2000 0.1000 -0.0500
+      vertex 0.2000 0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex -0.2000 0.1000 -0.0500
+      vertex -0.2000 0.1000 0.0500
+      vertex 0.2000 0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex 0.2000 -0.1000 -0.0500
+      vertex 0.2000 0.1000 -0.0500
+      vertex 0.2000 -0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex 0.2000 0.1000 -0.0500
+      vertex 0.2000 0.1000 0.0500
+      vertex 0.2000 -0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex -0.2000 0.1000 -0.0500
+      vertex -0.2000 -0.1000 -0.0500
+      vertex -0.2000 0.1000 0.0500
+    endloop
+  endfacet
+  facet normal 0 0 0
+    outer loop
+      vertex -0.2000 -0.1000 -0.0500
+      vertex -0.2000 -0.1000 0.0500
+      vertex -0.2000 0.1000 0.0500
+    endloop
+  endfacet
+endsolid cube

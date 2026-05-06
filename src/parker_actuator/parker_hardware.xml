@@ -1,0 +1,9 @@
+<library path="parker_actuator">
+  <class name="parker_actuator/ParkerHardwareInterface"
+         type="parker_actuator::ParkerHardwareInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The Parker Actuator hardware interface for Compax3 via RS232.
+    </description>
+  </class>
+</library>

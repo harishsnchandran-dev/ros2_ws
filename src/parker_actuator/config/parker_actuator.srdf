@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="parker_linear_actuator">
+    <group name="actuator_group">
+        <joint name="slider_joint"/>
+    </group>
+    <group_state name="home" group="actuator_group">
+        <joint name="slider_joint" value="0"/>
+    </group_state>
+    <group_state name="extended" group="actuator_group">
+        <joint name="slider_joint" value="0.4"/>
+    </group_state>
+    <virtual_joint name="virtual_joint" element_link="base_link" parent_frame="world" type="fixed"/>
+    <disable_collisions link1="base_link" link2="slider_link" reason="Adjacent"/>
+</robot>

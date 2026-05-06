@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="quadbot">
+
+  <xacro:property name="body_x" value="0.4" />
+  <xacro:property name="body_y" value="0.2" />
+  <xacro:property name="body_z" value="0.1" />
+  <xacro:property name="body_mass" value="8.0" />
+
+  <xacro:property name="coxa_l" value="0.05" />
+  <xacro:property name="femur_l" value="${2 * coxa_l}" />
+  <xacro:property name="tibia_l" value="${3 * coxa_l}" />
+  <xacro:property name="leg_mass" value="1.0" />
+
+  <!-- Base Link -->
+  <link name="base_footprint" />
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+    <origin xyz="0 0 0.24" rpy="0 0 0" />
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <geometry><mesh filename="package://quadbot/meshes/body.stl" /></geometry>
+      <material name="gray"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+    <collision>
+      <geometry><box size="${body_x} ${body_y} ${body_z}" /></geometry>
+    </collision>
+    <inertial>
+      <mass value="${body_mass}" />
+      <inertia ixx="${body_mass*(body_y*body_y+body_z*body_z)/12.0}" ixy="0" ixz="0" iyy="${body_mass*(body_x*body_x+body_z*body_z)/12.0}" iyz="0" izz="${body_mass*(body_x*body_x+body_y*body_y)/12.0}" />
+    </inertial>
+  </link>
+
+  <!-- Macro for Leg -->
+  <xacro:macro name="leg" params="prefix pos_x pos_y yaw">
+    <link name="${prefix}_coxa">
+      <visual>
+        <origin xyz="${coxa_l/2.0} 0 0" rpy="0 0 0"/>
+        <geometry><mesh filename="package://quadbot/meshes/coxa.stl" /></geometry>
+        <material name="blue"><color rgba="0 0 0.8 1.0"/></material>
+      </visual>
+      <collision>
+        <origin xyz="${coxa_l/2.0} 0 0" rpy="0 0 0"/><geometry><box size="${coxa_l} 0.04 0.04" /></geometry>
+      </collision>
+      <inertial>
+        <mass value="${leg_mass}" /><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_coxa_joint" type="revolute">
+      <parent link="base_link" />
+      <child link="${prefix}_coxa" />
+      <origin xyz="${pos_x} ${pos_y} 0" rpy="0 0 ${yaw}" />
+      <axis xyz="0 0 1" />
+      <limit lower="-1.57" upper="1.57" effort="20.0" velocity="2.0" />
+    </joint>
+
+    <link name="${prefix}_femur">
+      <visual>
+        <origin xyz="0 0 ${-femur_l/2.0}" rpy="0 0 0"/>
+        <geometry><mesh filename="package://quadbot/meshes/femur.stl" /></geometry>
+        <material name="green"><color rgba="0 0.8 0 1.0"/></material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${-femur_l/2.0}" rpy="0 0 0"/><geometry><box size="0.03 0.03 ${femur_l}" /></geometry>
+      </collision>
+      <inertial>
+        <mass value="${leg_mass}" /><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_femur_joint" type="revolute">
+      <parent link="${prefix}_coxa" />
+      <child link="${prefix}_femur" />
+      <origin xyz="${coxa_l} 0 0" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <limit lower="-1.57" upper="1.57" effort="20.0" velocity="2.0" />
+    </joint>
+
+    <link name="${prefix}_tibia">
+      <visual>
+        <origin xyz="0 0 ${-tibia_l/2.0}" rpy="0 0 0"/>
+        <geometry><mesh filename="package://quadbot/meshes/tibia.stl" /></geometry>
+        <material name="red"><color rgba="0.8 0 0 1.0"/></material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${-tibia_l/2.0}" rpy="0 0 0"/><geometry><box size="0.02 0.02 ${tibia_l}" /></geometry>
+      </collision>
+      <inertial>
+        <mass value="${leg_mass}" /><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_tibia_joint" type="revolute">
+      <parent link="${prefix}_femur" />
+      <child link="${prefix}_tibia" />
+      <origin xyz="0 0 ${-femur_l}" rpy="0 0 0" />
+      <axis xyz="0 1 0" />
+      <limit lower="-1.57" upper="1.57" effort="20.0" velocity="2.0" />
+    </joint>
+
+    <!-- Remove ROS 1 transmissions as they are redundant in ROS 2 and may cause parser issues -->
+  </xacro:macro>
+
+  <!-- Instantiate 6 Legs with proper angular placement -->
+  <!-- Right side: uses negative yaw angles -->
+  <xacro:leg prefix="rf" pos_x="${body_x/2.0}"  pos_y="${-body_y/2.0}" yaw="-0.785"/> 
+  <xacro:leg prefix="rm" pos_x="0.0"            pos_y="${-body_y/2.0}" yaw="-1.571"/>
+  <xacro:leg prefix="rb" pos_x="${-body_x/2.0}" pos_y="${-body_y/2.0}" yaw="-2.356"/>
+  
+  <!-- Left side: uses positive yaw angles -->
+  <xacro:leg prefix="lf" pos_x="${body_x/2.0}"  pos_y="${body_y/2.0}"  yaw="0.785"/>
+  <xacro:leg prefix="lm" pos_x="0.0"            pos_y="${body_y/2.0}"  yaw="1.571"/>
+  <xacro:leg prefix="lb" pos_x="${-body_x/2.0}" pos_y="${body_y/2.0}"  yaw="2.356"/>
+
+  <!-- ros2_control -->
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <joint name="rf_coxa_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="rf_femur_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="rf_tibia_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+
+    <joint name="rm_coxa_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="rm_femur_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="rm_tibia_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+
+    <joint name="rb_coxa_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="rb_femur_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="rb_tibia_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+
+    <joint name="lf_coxa_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="lf_femur_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="lf_tibia_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+
+    <joint name="lm_coxa_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="lm_femur_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="lm_tibia_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+
+    <joint name="lb_coxa_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="lb_femur_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+    <joint name="lb_tibia_joint">
+      <command_interface name="position"><param name="min">-1.57</param><param name="max">1.57</param></command_interface>
+      <state_interface name="position"/><state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <xacro:arg name="controllers_yaml" default="" />
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <parameters>$(arg controllers_yaml)</parameters>
+      <robot_param>robot_description</robot_param>
+      <robot_param_node>robot_state_publisher</robot_param_node>
+    </plugin>
+  </gazebo>
+
+  <!-- ===================== LIDAR ===================== -->
+  <link name="lidar_link">
+    <visual>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+      <material name="black"><color rgba="0.1 0.1 0.1 1"/></material>
+    </visual>
+    <collision>
+      <geometry><cylinder radius="0.05" length="0.04"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0 0 0.08" rpy="0 0 0"/>
+  </joint>
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="ray">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.3</min>
+          <max>5.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="quadbot_lidar" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- ===================== CAMERA ===================== -->
+  <link name="camera_link">
+    <visual>
+      <geometry><box size="0.05 0.05 0.05"/></geometry>
+      <material name="darkgray"><color rgba="0.2 0.2 0.2 1"/></material>
+    </visual>
+    <collision>
+      <geometry><box size="0.05 0.05 0.05"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.05"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+  </link>
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin xyz="0.22 0 0.04" rpy="0 0.2 0"/>
+  </joint>
+  <gazebo reference="camera_link">
+    <sensor name="front_camera" type="camera">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>30</update_rate>
+      <camera>
+        <horizontal_fov>1.3962634</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="quadbot_camera" filename="libgazebo_ros_camera.so">
+        <frame_name>camera_link</frame_name>
+        <ros>
+          <remapping>image_raw:=camera/image_raw</remapping>
+          <remapping>camera_info:=camera/camera_info</remapping>
+        </ros>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="lb_tibia"><mu1>10.0</mu1><mu2>10.0</mu2></gazebo>
+  <gazebo reference="lm_tibia"><mu1>10.0</mu1><mu2>10.0</mu2></gazebo>
+  <gazebo reference="lf_tibia"><mu1>10.0</mu1><mu2>10.0</mu2></gazebo>
+  <gazebo reference="rb_tibia"><mu1>10.0</mu1><mu2>10.0</mu2></gazebo>
+  <gazebo reference="rm_tibia"><mu1>10.0</mu1><mu2>10.0</mu2></gazebo>
+  <gazebo reference="rf_tibia"><mu1>10.0</mu1><mu2>10.0</mu2></gazebo>
+
+</robot>

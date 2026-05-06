@@ -1,0 +1,56 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    use_sim_time: True
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    joint_group_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+joint_group_position_controller:
+  ros__parameters:
+    use_sim_time: True
+    joints:
+      - rf_coxa_joint
+      - rf_femur_joint
+      - rf_tibia_joint
+      - rm_coxa_joint
+      - rm_femur_joint
+      - rm_tibia_joint
+      - rb_coxa_joint
+      - rb_femur_joint
+      - rb_tibia_joint
+      - lf_coxa_joint
+      - lf_femur_joint
+      - lf_tibia_joint
+      - lm_coxa_joint
+      - lm_femur_joint
+      - lm_tibia_joint
+      - lb_coxa_joint
+      - lb_femur_joint
+      - lb_tibia_joint
+
+gazebo_ros2_control:
+  ros__parameters:
+    use_sim_time: True
+    pid_gains:
+      rf_coxa_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rf_femur_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rf_tibia_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rm_coxa_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rm_femur_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rm_tibia_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rb_coxa_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rb_femur_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      rb_tibia_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lf_coxa_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lf_femur_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lf_tibia_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lm_coxa_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lm_femur_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lm_tibia_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lb_coxa_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lb_femur_joint: {p: 1000.0, i: 0.1, d: 50.0}
+      lb_tibia_joint: {p: 1000.0, i: 0.1, d: 50.0}

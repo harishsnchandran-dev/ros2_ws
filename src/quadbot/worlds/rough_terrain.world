@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="rough_terrain">
+    <include><uri>model://sun</uri></include>
+    <include><uri>model://ground_plane</uri></include>
+
+    <!-- Ambient light -->
+    <light name="ambient" type="directional">
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+
+    <!-- Block 1: step platform -->
+    <model name="block1">
+      <pose>2 0 0.1 0 0 0</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>1.5 1.5 0.2</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>1.5 1.5 0.2</size></box></geometry>
+        <material><ambient>0.7 0.5 0.3 1</ambient></material></visual></link>
+    </model>
+
+    <!-- Block 2: tall wall left -->
+    <model name="block2">
+      <pose>0.5 2 0.25 0 0 0</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>0.3 2 0.5</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>0.3 2 0.5</size></box></geometry>
+        <material><ambient>0.5 0.5 0.7 1</ambient></material></visual></link>
+    </model>
+
+    <!-- Block 3: ramp right -->
+    <model name="block3">
+      <pose>-1 -2 0.1 0.3 0 0.5</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>2 1 0.2</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>2 1 0.2</size></box></geometry>
+        <material><ambient>0.6 0.4 0.4 1</ambient></material></visual></link>
+    </model>
+
+    <!-- Block 4: scattered rocks -->
+    <model name="block4">
+      <pose>3 2 0.15 0.1 0.1 0</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>0.6 0.6 0.3</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>0.6 0.6 0.3</size></box></geometry>
+        <material><ambient>0.4 0.4 0.4 1</ambient></material></visual></link>
+    </model>
+
+    <model name="block5">
+      <pose>-2 1 0.1 0 0.2 1</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>1 0.4 0.2</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>1 0.4 0.2</size></box></geometry>
+        <material><ambient>0.5 0.6 0.3 1</ambient></material></visual></link>
+    </model>
+
+    <model name="block6">
+      <pose>1 -3 0.12 0 0 0.3</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>0.8 0.8 0.25</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>0.8 0.8 0.25</size></box></geometry>
+        <material><ambient>0.6 0.6 0.5 1</ambient></material></visual></link>
+    </model>
+
+    <!-- Boundary walls to keep robot in area -->
+    <model name="wall_north">
+      <pose>0 6 0.5 0 0 0</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>12 0.2 1</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>12 0.2 1</size></box></geometry>
+        <material><ambient>0.3 0.3 0.3 1</ambient></material></visual></link>
+    </model>
+    <model name="wall_south">
+      <pose>0 -6 0.5 0 0 0</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>12 0.2 1</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>12 0.2 1</size></box></geometry>
+        <material><ambient>0.3 0.3 0.3 1</ambient></material></visual></link>
+    </model>
+    <model name="wall_east">
+      <pose>6 0 0.5 0 0 0</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>0.2 12 1</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>0.2 12 1</size></box></geometry>
+        <material><ambient>0.3 0.3 0.3 1</ambient></material></visual></link>
+    </model>
+    <model name="wall_west">
+      <pose>-6 0 0.5 0 0 0</pose><static>true</static>
+      <link name="link"><collision name="col"><geometry><box><size>0.2 12 1</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>0.2 12 1</size></box></geometry>
+        <material><ambient>0.3 0.3 0.3 1</ambient></material></visual></link>
+    </model>
+
+  </world>
+</sdf>
+

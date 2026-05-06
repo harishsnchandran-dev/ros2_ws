@@ -1,0 +1,22 @@
+# ROS 2 build artifacts
+build/
+install/
+log/
+
+# Python virtual environments
+.venv/
+venv/
+
+# Large model files
+*.pt
+*.onnx
+
+# IDE files
+.vscode/
+
+# PDF/GV files from frames
+frames_*.gv
+frames_*.pdf
+
+# Temporal files
+su2preconfig.timestamp
